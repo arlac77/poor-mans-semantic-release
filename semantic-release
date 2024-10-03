@@ -1,0 +1,118 @@
+#!/usr/bin/perl
+use strict;
+
+sub bumpVersion {
+    my($version,$action)=@_;
+    my @parts = split(/\./,$version);
+
+    @parts[2]++ if $action eq 'fix';
+
+    if($action eq 'feat') { @parts[1]++; @parts[2] = 0; }
+    if($action eq 'mayor') { @parts[0]++; @parts[1] = @parts[2] = 0; }
+
+    return join('.',@parts);
+}
+
+sub analyseCommits {
+    my @tags = `git tag --sort=committerdate`;
+    my $last = $tags[-1];
+    chomp $last;
+
+    my @commits = `git log $last..HEAD --oneline`;
+    my $bump;
+
+    for my $commit (@commits) {
+        $bump = 'fix' if $commit =~ /^[0-9a-z]+\s+fix/ && !$bump;
+        $bump = 'feat' if $commit =~ /^[0-9a-z]+\s+feat/ && (!$bump || $bump eq 'fix');
+    }
+
+    ($last,$bump);
+}
+
+my $pattern => {
+    /PKGBUILD/ => /^pkgver=(.*)/
+};
+
+sub patchFile {
+    my($file,$regexp,$version)=@_;
+
+    open(FILE,"<$file") || die "opening '$file' $!";
+
+    my(@lines, $changed);
+
+    while(my $line=<FILE>) {
+        chomp $line;
+
+        if($line =~ /$regexp/) {
+            if($1 ne $version) {
+                $line = "pkgver=$version";
+                $changed = 1;
+            }
+        }
+
+        push @lines,$line;
+    }
+    close(FILE);
+
+    if($changed) {
+        open(FILE,">$file") || die "opening '$file' $!";
+        print FILE join("\n",@lines);
+        close(FILE);
+    }
+}
+
+sub readVersion {
+    my($file,$regexp)=@_;
+
+    open(FILE,"<$file") || die "opening '$file' $!";
+
+    while(my $line=<FILE>) {
+        chomp $line;
+
+        if($line =~ /$regexp/) {
+            close(FILE);
+            return $1;
+        }
+    }
+    close(FILE);
+}
+
+my @files = (
+    { name => 'PKGBUILD', regex => '^pkgver=(.*)' }
+);
+
+my ($last,$bump) = analyseCommits();
+
+$last = 0;
+
+$last =~ s/^v//;
+
+unless($last) {
+    for my $file (@files) {
+        my $name=$file->{name};
+        if( -f $name) {
+            $last = readVersion($name, $file->{regex});
+            last if $last;
+        }
+    }
+}
+
+$last = "1.0.0" unless $last;
+
+my $version = bumpVersion($last,$bump);
+
+print "($bump) $last -> $version\n"; 
+
+if($last ne $version) {
+    for my $file (@files) {
+        my $name=$file->{name};
+        if( -f $name) {
+            patchFile($name, $file->{regex}, $version);
+            `git add $name`;
+        }
+    }
+
+    `git commit -m "release $version"`;
+    `git tag v$version`;
+    `git push --tags`;
+}

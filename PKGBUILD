@@ -1,5 +1,5 @@
 pkgname=semantic-release
-pkgver=1.1.0
+pkgver=1.1.1
 pkgrel=0
 pkgdesc='poor mans semantic-release'
 arch=('any')

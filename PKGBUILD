@@ -9,6 +9,6 @@ depends=(perl)
 public=true
 
 package() {
-    install -dm775 "$pkgdir/usr/bin"
+    install -dm755 "$pkgdir/usr/bin"
     install -Dm644 $srcdir/../semantic-release "$pkgdir/usr/bin"
 }

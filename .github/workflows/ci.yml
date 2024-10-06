@@ -1,0 +1,39 @@
+name: CI
+on:
+  push:
+    branches:
+      - master
+      - next
+  pull_request:
+    branches:
+      - master
+      - next
+permissions:
+  contents: read
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+      id-token: write
+    steps:
+      - name: install dependencies
+        run: >
+          if [ ! -f /usr/bin/pacman ]
+
+          then
+
+          sudo apt-get update
+
+          sudo apt-get install ksh curl
+
+          wget
+          https://github.com/ThePoorPilot/pacman-utils/releases/download/5.2.2-3_2.31-0/pacman-utils_5.2.2-3_amd64.deb
+
+          sudo apt-get install -f ./pacman-utils_5.2.2-3_amd64.deb
+
+          fi
+      - name: release
+        run: makepkg

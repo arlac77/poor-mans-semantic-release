@@ -19,6 +19,8 @@ jobs:
       pull-requests: write
       id-token: write
     steps:
+      - name: checkout
+        uses: actions/checkout@v4.2.0
       - name: install dependencies
         run: >
           if [ ! -f /usr/bin/pacman ]
@@ -37,3 +39,10 @@ jobs:
           fi
       - name: release
         run: makepkg
+      - name: Store the distribution packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: semantic-release
+          path: semantic-release-1.1.1-0-any.pkg.tar.xz
+  
+  

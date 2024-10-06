@@ -38,6 +38,8 @@ jobs:
 
           fi
       - name: release
+        run: ./semantic-release
+      - name: create package
         run: makepkg --nodeps
       - name: Store the distribution packages
         uses: actions/upload-artifact@v4

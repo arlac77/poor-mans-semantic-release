@@ -38,7 +38,7 @@ jobs:
 
           fi
       - name: release
-        run: makepkg
+        run: makepkg --nodeps
       - name: Store the distribution packages
         uses: actions/upload-artifact@v4
         with:

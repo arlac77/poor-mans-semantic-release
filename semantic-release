@@ -18,20 +18,17 @@ sub analyseCommits {
     my $last = $tags[-1];
     chomp $last;
 
-    my @commits = `git log $last..HEAD --oneline`;
+    my @commits = `git log $last..HEAD`;
     my $bump;
 
     for my $commit (@commits) {
-        $bump = 'fix' if $commit =~ /^[0-9a-z]+\s+fix/ && !$bump;
-        $bump = 'feat' if $commit =~ /^[0-9a-z]+\s+feat/ && (!$bump || $bump eq 'fix');
+        $bump = 'fix' if $commit =~ /^\s*fix(\(\w+\))?:/ && !$bump;
+        $bump = 'feat' if $commit =~ /^\s*feat(\(\w+\))?:/ && (!$bump || $bump eq 'fix');
+        $bump = 'mayor' if $commit =~ /BREAKING\s+CHANGE/;
     }
 
     ($last,$bump);
 }
-
-my $pattern => {
-    /PKGBUILD/ => /^pkgver=(.*)/
-};
 
 sub patchFile {
     my($file,$regexp,$version)=@_;
@@ -59,6 +56,8 @@ sub patchFile {
         print FILE join("\n",@lines);
         close(FILE);
     }
+
+    return $changed;
 }
 
 sub readVersion {
@@ -107,8 +106,8 @@ if($last ne $version) {
     for my $file (@files) {
         my $name=$file->{name};
         if( -f $name) {
-            patchFile($name, $file->{regex}, $version);
-            `git add $name`;
+            my $changed = patchFile($name, $file->{regex}, $version);
+            `git add $name` if $changed;
         }
     }
 

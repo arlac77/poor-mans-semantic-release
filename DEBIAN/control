@@ -1,0 +1,7 @@
+Package: semantic-release
+Version: 1.2.0
+Section: utils
+Priority: optional
+Architecture: all
+Maintainer: Markus Felten <Markus.Felten@gmx.de>
+Description: poor mans semantic-release

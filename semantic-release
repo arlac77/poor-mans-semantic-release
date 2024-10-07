@@ -77,7 +77,8 @@ sub readVersion {
 }
 
 my @files = (
-    { name => 'PKGBUILD', regex => '^pkgver=(.*)' }
+    { name => 'PKGBUILD', regex => '^pkgver=(.*)' },
+    { name => 'DEBIAN/control', regex => '^Version:\s*(.*)' }
 );
 
 my ($last,$bump) = analyseCommits();

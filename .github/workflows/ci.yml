@@ -39,12 +39,22 @@ jobs:
           fi
       - name: release
         run: ./semantic-release
-      - name: create package
+      - name: create arch package
         run: makepkg --nodeps
-      - name: Store the distribution packages
+      - name: prepare
+        run: mkdir dist
+      - name: create debian package
+        run: dpkg -b . dist
+      - name: Store the arch distribution packages
         uses: actions/upload-artifact@v4
         with:
           name: semantic-release
           path: semantic-release-*.pkg.*
+      - name: Store the debian distribution packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: semantic-release-debian
+          path: dist/*.deb
   
+
   

@@ -45,16 +45,21 @@ jobs:
         run: mkdir dist
       - name: create debian package
         run: dpkg -b . dist
-      - name: Store the arch distribution packages
-        uses: actions/upload-artifact@v4
+      - name: Upload arch-linux binaries to release
+        uses: svenstaro/upload-release-action@v2
         with:
-          name: semantic-release
-          path: semantic-release-*.pkg.*
-      - name: Store the debian distribution packages
-        uses: actions/upload-artifact@v4
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: semantic-release-*.pkg.*
+          asset_name: arch-linux
+          tag: ${{ github.ref }}
+          file_glob: true
+      - name: Upload debian binaries to release
+        uses: svenstaro/upload-release-action@v2
         with:
-          name: semantic-release-debian
-          path: dist/*.deb
-  
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: dist/*.deb
+          asset_name: debian
+          tag: ${{ github.ref }}
+          file_glob: true
 
   

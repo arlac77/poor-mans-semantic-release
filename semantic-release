@@ -31,7 +31,7 @@ sub analyseCommits {
 }
 
 sub patchFile {
-    my($file,$regexp,$version)=@_;
+    my($file,$type,$version)=@_;
 
     open(FILE,"<$file") || die "opening '$file' $!";
 
@@ -40,9 +40,11 @@ sub patchFile {
     while(my $line=<FILE>) {
         chomp $line;
 
-        if($line =~ /$regexp/) {
+        my $regex = $type->{regex};
+
+        if($line =~ /$regex/) {
             if($1 ne $version) {
-                $line = "pkgver=$version";
+                $line = $type->{setVersion}->($line, $version);
                 $changed = 1;
             }
         }
@@ -77,8 +79,8 @@ sub readVersion {
 }
 
 my @files = (
-    { name => 'PKGBUILD', regex => '^pkgver=(.*)' },
-    { name => 'DEBIAN/control', regex => '^Version:\s*(.*)' }
+    { name => 'PKGBUILD', regex => '^pkgver=(.*)', setVersion => sub { my($line,$version)=@_; return "pkgver=$version"; } },
+    { name => 'DEBIAN/control', regex => '^Version:\s*(.*)', setVersion => sub { my($line,$version)=@_; return "Version: $version"; } }
 );
 
 my ($last,$bump) = analyseCommits();
@@ -107,7 +109,7 @@ if($last ne $version) {
     for my $file (@files) {
         my $name=$file->{name};
         if( -f $name) {
-            my $changed = patchFile($name, $file->{regex}, $version);
+            my $changed = patchFile($name, $file, $version);
             `git add $name` if $changed;
         }
     }

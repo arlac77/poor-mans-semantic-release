@@ -55,7 +55,7 @@ sub patchFile {
 
     if($changed) {
         open(FILE,">$file") || die "opening '$file' $!";
-        print FILE join("\n",@lines);
+        print FILE join("\n",@lines) . "\n";
         close(FILE);
     }
 

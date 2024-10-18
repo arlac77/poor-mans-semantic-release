@@ -1,5 +1,6 @@
 Package: semantic-release
-Version: 1.2.0
+Version: 1.2.1
+Depends: perl
 Section: utils
 Priority: optional
 Architecture: all

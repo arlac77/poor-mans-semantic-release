@@ -61,5 +61,8 @@ jobs:
           asset_name: debian
           tag: ${{ github.ref }}
           file_glob: true
-
+      - name: Upload arch-linux binaries to PKGBUILD_PUBLISH
+        run: >
+          URL=$(echo ${{ secrets.PKGBUILD_PUBLISH }}|sed s/{{type}}/arch/|sed s/{{access}}/public/|sed s/{{arch}}/any/)
+          curl --upload-file *.pkg.* $URL
   

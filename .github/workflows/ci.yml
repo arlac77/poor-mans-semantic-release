@@ -20,7 +20,7 @@ jobs:
       id-token: write
     steps:
       - name: checkout
-        uses: actions/checkout@v4.2.0
+        uses: actions/checkout@v4.2.2
       - name: install dependencies
         run: >
           if [ ! -f /usr/bin/pacman ]

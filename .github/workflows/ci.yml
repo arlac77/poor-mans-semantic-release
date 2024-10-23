@@ -45,6 +45,11 @@ jobs:
         run: mkdir dist
       - name: create debian package
         run: dpkg -b . dist
+      - name: Upload arch-linux binaries to PKGBUILD_PUBLISH
+        run: >
+          FILE=$(ls *.pkg.*)
+          URL=$(echo ${{ secrets.PKGBUILD_PUBLISH }}/$FILE|sed s/{{type}}/arch/|sed s/{{access}}/public/|sed s/{{arch}}/any/)
+          curl --upload-file *.pkg.* $URL
       - name: Upload arch-linux binaries to release
         uses: svenstaro/upload-release-action@v2
         with:
@@ -61,9 +66,4 @@ jobs:
           asset_name: debian
           tag: ${{ github.ref }}
           file_glob: true
-      - name: Upload arch-linux binaries to PKGBUILD_PUBLISH
-        run: >
-          FILE=$(ls *.pkg.*)
-          URL=$(echo ${{ secrets.PKGBUILD_PUBLISH }}/$FILE|sed s/{{type}}/arch/|sed s/{{access}}/public/|sed s/{{arch}}/any/)
-          curl --upload-file *.pkg.* $URL
   

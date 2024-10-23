@@ -49,7 +49,7 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: *.pkg.*
+          file: '*.pkg.*'
           asset_name: arch-linux
           tag: ${{ github.ref }}
           file_glob: true
@@ -57,7 +57,7 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: dist/*.deb
+          file: 'dist/*.deb'
           asset_name: debian
           tag: ${{ github.ref }}
           file_glob: true

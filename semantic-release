@@ -106,7 +106,7 @@ if($last ne $version) {
         my $name=$file->{name};
         if( -f $name) {
             my $changed = patchFile($name, $file, $version);
-            `git add --quiet $name` if $changed;
+            `git add $name` if $changed;
         }
     }
 

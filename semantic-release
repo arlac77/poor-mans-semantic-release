@@ -18,6 +18,8 @@ sub analyseCommits {
     my $last = $tags[-1];
     chomp $last;
 
+    $last =~ s/^v//;
+
     my @commits = `git log $last..HEAD`;
     my $bump;
 
@@ -84,10 +86,6 @@ my @files = (
 );
 
 my ($last,$bump) = analyseCommits();
-
-$last = 0;
-
-$last =~ s/^v//;
 
 unless($last) {
     for my $file (@files) {

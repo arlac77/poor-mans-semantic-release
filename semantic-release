@@ -106,14 +106,14 @@ if($last ne $version) {
         my $name=$file->{name};
         if( -f $name) {
             my $changed = patchFile($name, $file, $version);
-            `git add $name` if $changed;
+            `git add --quiet $name` if $changed;
         }
     }
 
-    `git commit -m "release $version"`;
-    `git tag v$version`;
-    `git push --tags`;
-    `git push`;
+    `git commit --quiet -m "release $version"`;
+    `git tag --quiet v$version`;
+    `git push --quiet --tags`;
+    `git push --quiet`;
 
     print "$version\n";
     exit 0;

@@ -48,7 +48,9 @@ jobs:
       - name: Upload arch-linux binaries to PKGBUILD_PUBLISH
         run: >
           FILE=$(ls *.pkg.*)
+          echo FILE: $FILE
           URL=$(echo ${{ secrets.PKGBUILD_PUBLISH }}/$FILE|sed s/{{type}}/arch/|sed s/{{access}}/public/|sed s/{{arch}}/any/)
+          echo URL: $URL
           curl --upload-file *.pkg.* $URL
       - name: Upload arch-linux binaries to release
         uses: svenstaro/upload-release-action@v2

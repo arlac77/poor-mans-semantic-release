@@ -111,7 +111,7 @@ if($last ne $version) {
     }
 
     `git commit --quiet -m "release $version"`;
-    `git tag --quiet v$version`;
+    `git tag v$version`;
     `git push --quiet --tags`;
     `git push --quiet`;
 

@@ -121,4 +121,4 @@ if($last ne $version) {
 
 print "($bump) $last -> $version\n"; 
 
-exit 1;
+exit $last == $version ? 0 : 1;

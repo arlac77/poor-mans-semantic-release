@@ -99,6 +99,7 @@ unless($last) {
 
 $last = "1.0.0" unless $last;
 
+my $failure = 1;
 my $version = bumpVersion($last,$bump);
 
 if($last ne $version) {
@@ -115,10 +116,9 @@ if($last ne $version) {
     `git push --quiet --tags`;
     `git push --quiet`;
 
-    print "$version\n";
-    exit 0;
+    $failure = 0;
 }
 
-print "($bump) $last -> $version\n"; 
+print "($bump) $last -> $version ($failure)\n";
 
-exit 1;
+exit $failure;

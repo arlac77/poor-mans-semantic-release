@@ -15,6 +15,12 @@ sub bumpVersion {
 
 sub analyseCommits {
     my @tags = `git tag --sort=committerdate`;
+
+    if($#tags <= 0) {
+        # force 1.0.0 in case there are no tags
+        return ("0.0.0",'mayor');
+    }
+
     my $last = $tags[-1];
     chomp $last;
 

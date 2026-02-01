@@ -18,7 +18,7 @@ sub analyseCommits {
 
     if($#tags <= 0) {
         # force 1.0.0 in case there are no tags
-        return ("0.0.0",'mayor');
+        return ("0.0.0",'major');
     }
 
     my $last = $tags[-1];

@@ -8,7 +8,7 @@ sub bumpVersion {
     @parts[2]++ if $action eq 'fix';
 
     if($action eq 'feat') { @parts[1]++; @parts[2] = 0; }
-    if($action eq 'mayor') { @parts[0]++; @parts[1] = @parts[2] = 0; }
+    if($action eq 'major') { @parts[0]++; @parts[1] = @parts[2] = 0; }
 
     return join('.',@parts);
 }
@@ -30,7 +30,7 @@ sub analyseCommits {
     for my $commit (@commits) {
         $bump = 'fix' if $commit =~ /^\s*fix(\(\w+\))?:/ && !$bump;
         $bump = 'feat' if $commit =~ /^\s*feat(\(\w+\))?:/ && (!$bump || $bump eq 'fix');
-        $bump = 'mayor' if $commit =~ /BREAKING\s+CHANGE/;
+        $bump = 'major' if $commit =~ /BREAKING\s+CHANGE/;
     }
 
     $last =~ s/^v//;

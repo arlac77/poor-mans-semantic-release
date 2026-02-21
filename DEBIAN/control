@@ -1,6 +1,6 @@
 Package: semantic-release
 Version: 1.4.4
-Depends: perl
+Depends: perl, git
 Section: utils
 Priority: optional
 Architecture: all

@@ -8,7 +8,7 @@ license=(MIT)
 public=true
 
 package() {
-    depends=(perl)
+    depends=(perl git)
     install -dm755 "$pkgdir/usr/bin"
     install -Dm755 $srcdir/../semantic-release "$pkgdir/usr/bin"
 }

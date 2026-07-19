@@ -16,7 +16,7 @@ sub bumpVersion {
 sub analyseCommits {
     my @tags = `git tag --sort=committerdate`;
 
-    if($#tags <= 0) {
+    if(@tags <= 0) {
         # force 1.0.0 in case there are no tags
         return ("0.0.0",'major');
     }
